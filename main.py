@@ -27,7 +27,7 @@ class GameofLife:
         self.running = True
         # clock ticks once per frame in miliseconds
         self.clock = pygame.time.Clock()
-        self.game_window = GameWindow(self.window, 80, 180)
+        self.game_window = GameWindow(self.window, 100, 200)
 
     def get_events(self):
         # loops through event queue
@@ -35,6 +35,10 @@ class GameofLife:
             # event is user clicking thw windows x button
             if event.type == pygame.QUIT:
                 self.running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_position = pygame.mouse.get_pos()
+                if self.mouse_on_grid(mouse_position):
+                    self.click_cell(mouse_position)
 
     def update_gen(self):
         self.game_window.update()
@@ -44,7 +48,24 @@ class GameofLife:
         self.window.fill(BACKGROUND)
         self.game_window.draw()
 
- # MAIN GAME LOOP
+    def mouse_on_grid(self, pos):
+        if pos[0] > 100 and pos[0] < WIDTH - 100:
+            if pos[1] > 180 and pos[1] < HEIGHT:
+                return True
+        return False
+
+    def click_cell(self, pos):
+        grid_position = [pos[0]-100, pos[1]-200]
+        grid_position[0] = grid_position[0] // 20
+        grid_position[1] = grid_position[1] // 20
+        if self.game_window.grid[grid_position[1]][grid_position[0]].alive:
+            self.game_window.grid[grid_position[1]
+                                  ][grid_position[0]].alive = False
+        else:
+            self.game_window.grid[grid_position[1]
+                                  ][grid_position[0]].alive = True
+
+     # MAIN GAME LOOP
 
     def game_loop(self):
 
