@@ -11,8 +11,9 @@ from game_window import *
 # Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
 WIDTH, HEIGHT = 800, 800
-# background color
-BACKGROUND = (25, 55, 255)
+# Light blue
+BACKGROUND = (153, 204, 255)
+# black
 ALIVE = (0, 0, 0)
 FPS = 60
 
@@ -39,9 +40,9 @@ class GameofLife:
         self.game_window.update()
 
     def draw(self):
+        # fills screen with color
         self.window.fill(BACKGROUND)
         self.game_window.draw()
-        # fills screen with color
 
  # MAIN GAME LOOP
 
@@ -52,7 +53,6 @@ class GameofLife:
             # update contents of the display
             self.update_gen()
             self.draw()
-            pygame.display.update()
             self.clock.tick(FPS)
 
 
