@@ -49,7 +49,8 @@ class GameofLife:
     def update_gen(self):
         self.game_window.update()
         for button in self.buttons:
-            button.update(self.mouse_position)
+            mouse_position = pygame.mouse.get_pos()
+            button.update(mouse_position)
 
     def draw(self):
         # fills screen with color
@@ -76,7 +77,9 @@ class GameofLife:
     def running_update_gen(self):
         self.game_window.update()
         for button in self.buttons:
-            button.update(self.mouse_position)
+            mouse_position = pygame.mouse.get_pos()
+            button.update(mouse_position)
+        self.game_window.evaluate()
 
     def running_draw(self):
         # fills screen with color
@@ -102,8 +105,10 @@ class GameofLife:
 
     def paused_update_gen(self):
         self.game_window.update()
+
         for button in self.buttons:
-            button.update(self.mouse_position)
+            mouse_position = pygame.mouse.get_pos()
+            button.update(mouse_position)
 
     def paused_draw(self):
         # fills screen with color
@@ -156,22 +161,23 @@ class GameofLife:
     def game_loop(self):
 
         while self.running:
-            self.mouse_position = pygame.mouse.get_pos()
+            mouse_position = pygame.mouse.get_pos()
             if self.state == 'setting':
                 self.get_events()
                 # update contents of the display
                 self.update_gen()
                 self.draw()
-            if self.state == 'running':
+            elif self.state == 'running':
                 self.running_get_events()
                 # update contents of the display
                 self.running_update_gen()
                 self.running_draw()
-            if self.state == 'paused':
+            elif self.state == 'paused':
                 self.paused_get_events()
                 # update contents of the display
                 self.paused_update_gen()
                 self.paused_draw()
+            pygame.display.update()
             self.clock.tick(FPS)
 
 
