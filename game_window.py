@@ -41,3 +41,7 @@ class GameWindow:
                 cell.draw()
         self.screen.blit(self.image, (self.position.x, self.position.y))
         pygame.display.flip()
+
+    def reset_grid(self):
+        self.grid = [[Cell(self.image, x, y) for x in range(self.num_cols)]
+                     for y in range(self.num_rows)]

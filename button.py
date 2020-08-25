@@ -27,7 +27,7 @@ class Button:
         self.bold_text = bold_text
         self.hovered = False
 
-    def update(self):
+    def update(self, pos):
         if self.mouse_hovering(pos):
             self.hovered = True
         else:
