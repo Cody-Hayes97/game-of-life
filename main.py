@@ -2,6 +2,7 @@ import pygame
 import sys
 from game_window import *
 from button import *
+from text import *
 
 # GAME RULES
 # -----------------------------------------------
@@ -30,8 +31,11 @@ class GameofLife:
         self.game_window = GameWindow(self.window, 100, 200)
         self.buttons = self.make_buttons()
         self.state = 'setting'
+        self.frame_count = 0
+
 
 # ----------------------------SETTING---------------------------------------------
+
     def get_events(self):
         # loops through event queue
         for event in pygame.event.get():
@@ -79,7 +83,8 @@ class GameofLife:
         for button in self.buttons:
             mouse_position = pygame.mouse.get_pos()
             button.update(mouse_position)
-        self.game_window.evaluate()
+        if self.frame_count % (FPS//10) == 0:
+            self.game_window.evaluate()
 
     def running_draw(self):
         # fills screen with color
@@ -144,7 +149,24 @@ class GameofLife:
                               color=(255, 255, 255), hover_color=(200, 200, 200), function=self.pause_game))
         buttons.append(Button(self.window, WIDTH//1.25-50, 150, 100, 30, text='RESET',
                               color=(255, 255, 255), hover_color=(200, 200, 200), function=self.reset_grid))
+        buttons.append(Button(self.window, WIDTH//2-150, -10, 300, 50, text="CONWAY'S GAME OF LIFE", border_color=(153, 204, 255),
+                              color=(153, 204, 255), hover_color=(153, 204, 255)))
+        #   -----------------------RULES-------------------------------
+        buttons.append(Button(self.window, WIDTH//2-350, 40, 700, 30, text="Any live cell with fewer than two live neighbours dies, as if by underpopulation.", border_color=(153, 204, 255),
+                              color=(153, 204, 255), hover_color=(153, 204, 255)))
+        buttons.append(Button(self.window, WIDTH//2-350, 65, 700, 30, text="Any live cell with two or three live neighbours lives on to the next generation.", border_color=(153, 204, 255),
+                              color=(153, 204, 255), hover_color=(153, 204, 255)))
+        buttons.append(Button(self.window, WIDTH//2-350, 90, 700, 30, text="Any live cell with more than three live neighbours dies, as if by overpopulation.", border_color=(153, 204, 255),
+                              color=(153, 204, 255), hover_color=(153, 204, 255)))
+        buttons.append(Button(self.window, WIDTH//2-400, 115, 800, 30, text="Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.", border_color=(153, 204, 255),
+                              color=(153, 204, 255), hover_color=(153, 204, 255)))
         return buttons
+
+    # def make_text(self):
+    #     text = []
+    #     text.append(Text(self.window, WIDTH//5-50, 100, "Arial",
+    #                      30, "Hello"))
+    #     return text
 
     def run_game(self):
         self.state = 'running'
@@ -161,8 +183,11 @@ class GameofLife:
     def game_loop(self):
 
         while self.running:
+            self.frame_count += 1
+
             mouse_position = pygame.mouse.get_pos()
             if self.state == 'setting':
+
                 self.get_events()
                 # update contents of the display
                 self.update_gen()
