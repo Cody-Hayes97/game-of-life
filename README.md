@@ -28,6 +28,6 @@ If you would like to download and play the game for yourself, please follow the 
 1. FAST - will double the frame rate and cause the cells to move more quickly
 
 # Portfolio 
-If you would like to see my portfolio, please follow the link below
-[Portfolio](https://www.codyhayesdeveloper.com/)
+If you would like to see my portfolio, please follow the link
+[here](https://www.codyhayesdeveloper.com/)
 
