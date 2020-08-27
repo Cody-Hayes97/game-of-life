@@ -3,7 +3,7 @@ vec = pygame.math.Vector2
 
 
 class Button:
-    def __init__(self, surface, x, y, width, height, state='', function=0, color=(255, 255, 255), hover_color=(255, 255, 255), border=True, border_width=2, border_color=(0, 0, 0), text='', font_name='arial', text_size=20, text_color=(0, 0, 0), bold_text=False):
+    def __init__(self, surface, x, y, width, height, state='', id='', function=0, color=(255, 255, 255), hover_color=(255, 255, 255), border=True, border_width=2, border_color=(0, 0, 0), text='', font_name='arial', text_size=20, text_color=(0, 0, 0), bold_text=False):
         self.x = x
         self.y = y
         self.position = vec(x, y)
@@ -14,6 +14,7 @@ class Button:
         self.rect = self.image.get_rect()
         self.rect.topleft = self.position
         self.state = state
+        self.id = id
         self.function = function
         self.color = color
         self.hover_color = hover_color
@@ -27,7 +28,7 @@ class Button:
         self.bold_text = bold_text
         self.hovered = False
 
-    def update(self, pos):
+    def update(self, pos, game_state=''):
         if self.mouse_hovering(pos):
             self.hovered = True
         else:
@@ -61,8 +62,9 @@ class Button:
         if mouse_position[0] > self.position[0] and mouse_position[0] < self.position[0]+self.width:
             if mouse_position[1] > self.position[1] and mouse_position[1] < self.position[1]+self.height:
                 return True
-        return False
+        else:
+            return False
 
     def click(self):
-        if self.function != 0:
+        if self.function != 0 and self.hovered:
             self.function()

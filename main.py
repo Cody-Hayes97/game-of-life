@@ -2,6 +2,8 @@ import pygame
 import sys
 from game_window import *
 from button import *
+from text import *
+import time
 
 # GAME RULES
 # -----------------------------------------------
@@ -15,7 +17,6 @@ WIDTH, HEIGHT = 800, 800
 BACKGROUND = (153, 204, 255)
 # black
 ALIVE = (0, 0, 0)
-FPS = 60
 
 
 class GameofLife:
@@ -28,10 +29,17 @@ class GameofLife:
         # clock ticks once per frame in miliseconds
         self.clock = pygame.time.Clock()
         self.game_window = GameWindow(self.window, 100, 200)
-        self.buttons = self.make_buttons()
         self.state = 'setting'
+        self.frame_count = 0
+        self.gen_count = 1
+        self.gen_text = f'GENERATION: {self.gen_count}'
+        self.buttons = self.make_buttons()
+        self.fps = 60
+        self.gen_count = 1
+
 
 # ----------------------------SETTING---------------------------------------------
+
     def get_events(self):
         # loops through event queue
         for event in pygame.event.get():
@@ -49,7 +57,8 @@ class GameofLife:
     def update_gen(self):
         self.game_window.update()
         for button in self.buttons:
-            button.update(self.mouse_position)
+            mouse_position = pygame.mouse.get_pos()
+            button.update(mouse_position)
 
     def draw(self):
         # fills screen with color
@@ -76,11 +85,15 @@ class GameofLife:
     def running_update_gen(self):
         self.game_window.update()
         for button in self.buttons:
-            button.update(self.mouse_position)
+            mouse_position = pygame.mouse.get_pos()
+            button.update(mouse_position)
+        if self.frame_count % (self.fps//10) == 0:
+            self.game_window.evaluate()
 
     def running_draw(self):
         # fills screen with color
         self.window.fill(BACKGROUND)
+
         for button in self.buttons:
             button.draw()
         self.game_window.draw()
@@ -102,8 +115,10 @@ class GameofLife:
 
     def paused_update_gen(self):
         self.game_window.update()
+
         for button in self.buttons:
-            button.update(self.mouse_position)
+            mouse_position = pygame.mouse.get_pos()
+            button.update(mouse_position)
 
     def paused_draw(self):
         # fills screen with color
@@ -135,11 +150,38 @@ class GameofLife:
         buttons = []
         buttons.append(Button(self.window, WIDTH//5-50, 150, 100, 30, text='START',
                               color=(255, 255, 255), hover_color=(200, 200, 200), function=self.run_game))
-        buttons.append(Button(self.window, WIDTH//2-50, 150, 100, 30, text='STOP',
+        buttons.append(Button(self.window, WIDTH//3-50, 150, 100, 30, text='STOP',
                               color=(255, 255, 255), hover_color=(200, 200, 200), function=self.pause_game))
-        buttons.append(Button(self.window, WIDTH//1.25-50, 150, 100, 30, text='RESET',
+        buttons.append(Button(self.window, WIDTH//2-77, 150, 100, 30, text='RESET',
                               color=(255, 255, 255), hover_color=(200, 200, 200), function=self.reset_grid))
+        buttons.append(Button(self.window, WIDTH//1.5-77, 150, 70, 30, text='SLOW',
+                              color=(237, 245, 88), hover_color=(121, 128, 0), function=self.make_slow))
+        buttons.append(Button(self.window, WIDTH//1.5, 150, 70, 30, text='FAST',
+                              color=(237, 245, 88), hover_color=(121, 128, 0), function=self.make_fast))
+        # -----------------------TITLE-------------------------------------------
+        buttons.append(Button(self.window, WIDTH//2-150, -10, 300, 50, text="CONWAY'S GAME OF LIFE", border_color=(153, 204, 255),
+                              color=(153, 204, 255), hover_color=(153, 204, 255)))
+        #   ---------Generation DISPLAY-------------------------------------
+        # buttons.append(Button(self.window, 450, 140, 200, 50, text=self.gen_text, border_color=(153, 204, 255),
+        #                       color=(153, 204, 255), hover_color=(153, 204, 255)))
+        #   -----------------------RULES-------------------------------
+        buttons.append(Button(self.window, WIDTH//2-350, 40, 700, 30, text="Any live cell with fewer than two live neighbours dies, as if by underpopulation.", border_color=(153, 204, 255),
+                              color=(153, 204, 255), hover_color=(153, 204, 255), text_size=16))
+        buttons.append(Button(self.window, WIDTH//2-350, 65, 700, 30, text="Any live cell with two or three live neighbours lives on to the next generation.", border_color=(153, 204, 255),
+                              color=(153, 204, 255), hover_color=(153, 204, 255), text_size=16))
+        buttons.append(Button(self.window, WIDTH//2-350, 90, 700, 30, text="Any live cell with more than three live neighbours dies, as if by overpopulation.", border_color=(153, 204, 255),
+                              color=(153, 204, 255), hover_color=(153, 204, 255), text_size=16))
+        buttons.append(Button(self.window, WIDTH//2-400, 115, 800, 30, text="Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.", border_color=(153, 204, 255),
+                              color=(153, 204, 255), hover_color=(153, 204, 255), text_size=16))
         return buttons
+
+    def draw_gen(self):
+        # font = pygame.font.Font(None, 24)
+        # text = font.render('Gen: ' + str(self.gen_count), 1, ALIVE)
+        # text_pos = text.get_rect()
+        # self.window.blit(text, text_pos)
+        # pygame.display.flip()
+        pass
 
     def run_game(self):
         self.state = 'running'
@@ -151,28 +193,39 @@ class GameofLife:
         self.state = 'setting'
         self.game_window.reset_grid()
 
+    def make_slow(self):
+        self.fps = 120
+
+    def make_fast(self):
+        self.fps = 10
+
      # MAIN GAME LOOP
 
     def game_loop(self):
+        self.draw_gen()
 
         while self.running:
-            self.mouse_position = pygame.mouse.get_pos()
+            self.frame_count += 1
+            # print(self.fps)
+            mouse_position = pygame.mouse.get_pos()
             if self.state == 'setting':
+
                 self.get_events()
                 # update contents of the display
                 self.update_gen()
                 self.draw()
-            if self.state == 'running':
+            elif self.state == 'running':
                 self.running_get_events()
                 # update contents of the display
                 self.running_update_gen()
                 self.running_draw()
-            if self.state == 'paused':
+            elif self.state == 'paused':
                 self.paused_get_events()
                 # update contents of the display
                 self.paused_update_gen()
                 self.paused_draw()
-            self.clock.tick(FPS)
+            pygame.display.update()
+            self.clock.tick(self.fps)
 
 
 if __name__ == '__main__':
