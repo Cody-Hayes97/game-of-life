@@ -18,7 +18,7 @@ In the Game of Life, each square in the grid is considered a **Cell**. each cell
 The initial pattern constitutes the seed of the system. The first generation is created by applying the above rules simultaneously to every cell in the seed; births and deaths occur simultaneously, and the discrete moment at which this happens is sometimes called a tick. Each generation is a pure function of the preceding one. The rules continue to be applied repeatedly to create further generations.
 
 # To start the game
-If you would like to download and play the game for yourself, please follow the link below to the repository where I have uploaded the executable, alternatively, you could just clone this repo and run the main.py file!
+If you would like to download and play the game for yourself, please follow [this link](https://github.com/Cody-Hayes97/game-of-life-executable) to the repository where I have uploaded the executable, alternatively, you could just clone this repo and run the main.py file!
 
 **Once you have the game open, you will have several options:**
 1. START - will run the algorithm based on the layout of cells you have initially clicked
