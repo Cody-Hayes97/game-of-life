@@ -31,11 +31,9 @@ class GameofLife:
         self.game_window = GameWindow(self.window, 100, 200)
         self.state = 'setting'
         self.frame_count = 0
-        self.gen_count = 1
-        self.gen_text = f'GENERATION: {self.gen_count}'
+
         self.buttons = self.make_buttons()
         self.fps = 60
-        self.gen_count = 1
 
 
 # ----------------------------SETTING---------------------------------------------
@@ -83,6 +81,7 @@ class GameofLife:
                         button.click()
 
     def running_update_gen(self):
+
         self.game_window.update()
         for button in self.buttons:
             mouse_position = pygame.mouse.get_pos()
@@ -91,6 +90,7 @@ class GameofLife:
             self.game_window.evaluate()
 
     def running_draw(self):
+
         # fills screen with color
         self.window.fill(BACKGROUND)
 
@@ -176,12 +176,10 @@ class GameofLife:
         return buttons
 
     def draw_gen(self):
-        # font = pygame.font.Font(None, 24)
-        # text = font.render('Gen: ' + str(self.gen_count), 1, ALIVE)
-        # text_pos = text.get_rect()
-        # self.window.blit(text, text_pos)
-        # pygame.display.flip()
-        pass
+        font = pygame.font.SysFont(None, 50)
+        text = font.render(self.game_window.make_text(), True, ALIVE)
+        self.window.blit(text, [400, 10])
+        pygame.display.update()
 
     def run_game(self):
         self.state = 'running'
@@ -214,11 +212,13 @@ class GameofLife:
                 # update contents of the display
                 self.update_gen()
                 self.draw()
+                self.draw_gen()
             elif self.state == 'running':
                 self.running_get_events()
                 # update contents of the display
                 self.running_update_gen()
                 self.running_draw()
+                self.draw_gen()
             elif self.state == 'paused':
                 self.paused_get_events()
                 # update contents of the display

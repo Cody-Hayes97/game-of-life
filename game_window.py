@@ -14,6 +14,7 @@ class GameWindow:
         self.image = pygame.Surface((self.width, self.height))
         self.rect = self.image.get_rect()
         self.init_grids()
+        self.gen_count = 1
 
     def init_grids(self):
         # self.num_cols = 33
@@ -34,6 +35,9 @@ class GameWindow:
         for row in self.grid:
             for cell in row:
                 cell.update()
+
+    def make_text(self):
+        return f'Generation: {self.gen_count}'
 
     def draw(self):
         self.image.fill((255, 255, 255))
@@ -70,5 +74,5 @@ class GameWindow:
             for xidx, cell in enumerate(row):
                 if cell.alive:
                     new_grid[yidx][xidx].set_color()
-
+        self.gen_count += 1
         self.grid = new_grid

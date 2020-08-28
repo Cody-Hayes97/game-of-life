@@ -59,4 +59,4 @@ class Cell:
                 self.color = cell.color
             else:
                 self.color = (random.randint(0, 255),  random.randint(
-                    0, 255),  random.randint(0, 255))
+                    0, 255),  255)
